@@ -2,7 +2,7 @@
 // Created by minae on 8/20/2022.
 //
 
-#ifndef PAYMENTAPPLICATION_SERVER_H
-#define PAYMENTAPPLICATION_SERVER_H
+#ifndef SERVER_H
+#define SERVER_H
 
-#endif //PAYMENTAPPLICATION_SERVER_H
+#endif //SERVER_H

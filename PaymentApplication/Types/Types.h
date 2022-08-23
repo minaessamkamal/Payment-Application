@@ -1,9 +1,10 @@
-//
-// Created by minae on 8/20/2022.
-//
+/*              Types.h
+ * Created By:  Mina Essam
+ * Date:        23/08/2022
+ * Version:     V01*/
 
-#ifndef PAYMENTAPPLICATION_TYPES_H
-#define PAYMENTAPPLICATION_TYPES_H
+#ifndef TYPES_H
+#define TYPES_H
 
 typedef unsigned char               uint8_t;
 typedef signed char                 int8_t;
@@ -16,4 +17,4 @@ typedef signed int                  int32_t;
 
 typedef unsigned long long          uint64_t;
 typedef signed long long            int64_t;
-#endif //PAYMENTAPPLICATION_TYPES_H
+#endif
