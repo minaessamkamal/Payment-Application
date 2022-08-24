@@ -128,5 +128,8 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t *cardData){
         strcpy_s(cardData->cardExpirationDate, sizeof(cardData->cardExpirationDate)/ sizeof(cardData->cardExpirationDate[0]), date);
         printf("The date you entered is %s\n", cardData->cardExpirationDate);
     }
+    else{
+        /* do nothing*/
+    }
 return DateValidation;
 }
