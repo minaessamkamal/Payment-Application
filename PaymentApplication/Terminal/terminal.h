@@ -1,10 +1,13 @@
-//
-// Created by minae on 8/20/2022.
-//
+/*********************************************
+* *File Name:    Terminal.c                  *
+* *Created by:   Mina Essam                  *
+* *Date:         08/20/2022                  *
+* *Version:      V01                         *
+* ********************************************/
+
 
 #ifndef TERMINAL_H
 #define TERMINAL_H
-#include "../Types/Types.h"
 #include "../Card/card.h"
 typedef struct ST_terminalData_t
 {

@@ -3,7 +3,6 @@
  * Date:        23/08/2022
  * Version:     V01*/
 
-
 #ifndef CARD_H
 #define CARD_H
 #include "../Types/Types.h"
