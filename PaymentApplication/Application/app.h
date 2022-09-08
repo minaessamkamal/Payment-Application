@@ -1,4 +1,4 @@
-/*                                          *
+/**                                         *
  *File Name:    App.h                       *
  *Created by:   Mina Essam                  *
  *Date:         08/17/2022                  *

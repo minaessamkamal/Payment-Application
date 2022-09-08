@@ -19,30 +19,31 @@
  * Output:  0 if card name is correct 1 if card name is wrong   *****
  ********************************************************************/
 EN_cardError_t getCardHolderName(ST_cardData_t *cardData){
-    EN_cardError_t result;
+    EN_cardError_t result ;
     uint8_t name[25] = {0}, nameLength;
     printf("Please enter card holder name:\t");
     scanf("%[^\n]s", name);
     nameLength = strlen(name);
-    printf("length of the chars you entered %d", nameLength);
-    if(nameLength ==emptyName){
-        printf("You didn't enter the name");
+    //printf("length of the chars you entered %d \t", nameLength);
+    if(nameLength == emptyName){
+        printf("You enter an empty name\n");
         result = WRONG_NAME;
     }
     else if(nameLength <minNameChar ||nameLength > maxNameChar){
-        printf("You enter a name which didn't mean the minimum char length %d", nameLength );
+        printf("Minimum name length is 24 and you enter a %d name's length\n", nameLength );
         result = WRONG_NAME;
     }
     else{
-        printf("You enter a correct name:\t %s %d %d", name, nameLength, Card_OK);
+     //   printf("You enter Valid Name:\n");
         result = Card_OK;
     }
     if(result == Card_OK) {
         strcpy_s(cardData->cardHolderName, sizeof(cardData->cardHolderName)/ sizeof(cardData->cardHolderName[0]),name);
-        printf("\nWe are printing array in structure with the name %s\n", cardData->cardHolderName);
+        printf("\nWe are Saving: '%s' in our DB....\n", cardData->cardHolderName);
     }
     else{
-        printf("\nsorry we didnt store the name value you entered as you didn't meet name rules\n");
+        printf("Failed to save the value in our records as it didn't meet name rules!");
+
         exit(0);
     }
     return result;
@@ -62,26 +63,26 @@ EN_cardError_t getCardPAN(ST_cardData_t *cardData){
 if(panLength == emptyPAN)
 {
     PANValidation = WRONG_PAN;
-    printf("\nYou enter an empty PAN number \n %d", panLength);
+    printf("You enter an empty PAN number \n %d", panLength);
 
 }
 else if(panLength <minPANNumber || panLength > maxPANNumber){
     PANValidation = WRONG_PAN;
-    printf("\nYou enter a PAN number that doesn't meet PAN number rules\n %s %d\n",PAN,panLength);
+    printf("\n Minimum name length is 16 and you enter PAN \t %s and it' length \t %d\n",PAN,panLength);
 
 }
 else{
     PANValidation = Card_OK;
-    printf("\nYou have entered a correct PAN:\t %s %d\n", PAN, panLength);
+   // printf("\nYou have entered a correct PAN:\t %s %d\n", PAN, panLength);
 }
 
 if(PANValidation == Card_OK)
 {
     strcpy_s(cardData->primaryAccountNumber, sizeof(cardData->primaryAccountNumber)/ sizeof(cardData->primaryAccountNumber[0]),PAN);
-    printf("\nWe have copied the number you entered to struct array and it's value %s\n", cardData->primaryAccountNumber);
+    printf("We are Saving: '%s' in our DB....\n", cardData->primaryAccountNumber);
 }
 else{
-    printf("PAN number doesn't meet PAN rules \n");
+    printf("Failed to save the value in our records as PAN number doesn't meet PAN rules \n");
     exit(0);
 }
 return PANValidation;
@@ -142,7 +143,7 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t *cardData){
         printf("The date you entered is %s\n", cardData->cardExpirationDate);
     }
     else{
-        /* do nothing       */
+        /** do nothing       */
     }
 return DateValidation;
 }

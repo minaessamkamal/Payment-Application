@@ -32,13 +32,13 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData){
     }
     else {
         isMaxEqualZero = Terminal_OK;
-        printf("\nSUCCESS!\n");
+      //  printf("\nSUCCESS!\n");
     }
     /*the if condition */
     if(isMaxEqualZero == Terminal_OK)
     {
         termData->maxTransAmount = amount;
-        printf("\nWe have a new Max transaction %f", termData->maxTransAmount);
+        printf("\nMax transaction Amount:  %f\n", termData->maxTransAmount);
     }
     else{
         /* do nothing*/
@@ -56,7 +56,8 @@ uint8_t isBelow;
 if(termData->transAmount > termData->maxTransAmount)
 {
     isBelow =EXCEED_MAX_AMOUNT;
-    printf("You entered an amount that exceed max terminal amount which is %f", termData->maxTransAmount);
+    printf("You entered an amount that exceed max terminal amount which is %f\n", termData->maxTransAmount);
+    exit(0);
 }
 else{
     isBelow = Terminal_OK;
@@ -72,14 +73,16 @@ return isBelow;
  ****************************************************************************/
 EN_terminalError_t getTransactionDate(ST_terminalData_t *termData){
     EN_terminalError_t isValidDate= Terminal_OK;
-    uint8_t TransactionDate[10];
-    printf("OS time is %s\n", _strdate(TransactionDate));
-    TransactionDate[8] = TransactionDate[6];
-    TransactionDate[9] = TransactionDate[7];
-    TransactionDate[6] = '2';
-    TransactionDate[7] = '0';
-    strcpy(termData->transactionDate,TransactionDate);
-    printf("the new format is %s", termData->transactionDate);
+    uint8_t TransDate[10]={0};
+    strcpy_s(TransDate,sizeof(TransDate)/ sizeof(TransDate[0]), _strdate(TransDate));
+   // printf("OS time is %s\n", TransDate);
+    TransDate[8] = TransDate[6];
+    TransDate[9] = TransDate[7];
+    TransDate[6] = '2';
+    TransDate[7] = '0';
+    //printf("NEEEE %s \n", TransDate);
+    strcpy_s(termData->transactionDate, sizeof(termData->transactionDate)/ sizeof(termData->transactionDate[0]),TransDate);
+    printf("the Transaction Date ... %s\n", termData->transactionDate);
     return isValidDate;
 }
 
@@ -101,21 +104,32 @@ EN_terminalError_t isCardExpired(ST_cardData_t cardData, ST_terminalData_t termD
     /** the following function will copy the date stored in card date into local
      * variable CAD_DATe
      * Month*/
+  //  printf("We will copy for the  terminal date: %s \n", termData.transactionDate);
+  //  printf("We will copy for the date that %s \n", cardData.cardExpirationDate);
+
     strncpy_s(CADAte, sizeof(CADAte)/ sizeof(CADAte[0]),cardData.cardExpirationDate+3,2);
-    /*this function to take year of trans date*/
+    /**this function to take year of trans date*/
+
     strncpy_s(tranDate, sizeof(tranDate)/ sizeof(tranDate[0]), termData.transactionDate+8,2);
+
     cDate = atoi(CADAte);
     transDate = atoi(tranDate);
+
+  //  printf("cDATE = %d\n",cDate);
+//    printf("transDate = %d\n",transDate);
+//    printf("tranDate = %s\n",termData.transactionDate+8);
+
     if(cDate > transDate){
         isExpired = Terminal_OK;
         printf("Card is Valid\n");
     }
     else if( cDate < transDate){
         isExpired =EXPIRED_CARD;
-        printf("Card is Expired");
+        printf("Card is Expired Transaction Declined ...\n");
+        exit(0);
     }
     else{
-        printf("we are here \n");
+     //   printf("we are here \n");
         strncpy_s(CADAte, sizeof(CADAte)/ sizeof(CADAte[0]),cardData.cardExpirationDate,2);
         /*this function to take month of trans date*/
         strncpy_s(tranDate, sizeof(tranDate)/ sizeof(tranDate[0]), termData.transactionDate,2);
@@ -129,7 +143,8 @@ EN_terminalError_t isCardExpired(ST_cardData_t cardData, ST_terminalData_t termD
         else
         {
             isExpired = EXPIRED_CARD;
-            printf("Month is expired \n");
+            printf("Card is expired as of month Transaction Declined \n");
+            exit(0);
         }
     }
 return isExpired;

@@ -1,7 +1,9 @@
-/*              card.h
- * Created By:  Mina Essam
- * Date:        23/08/2022
- * Version:     V01*/
+/********************************************
+* *File Name:    Card.c                      *
+* *Created by:   Mina Essam                  *
+* *Date:         08/20/2022                  *
+* *Version:      V01                         *
+ ********************************************/
 
 #ifndef CARD_H
 #define CARD_H

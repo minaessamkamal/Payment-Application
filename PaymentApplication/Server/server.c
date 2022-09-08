@@ -1,19 +1,23 @@
-/*
-/ Created by minae on 8/20/2022.
-*/
+/********************************************
+ *File Name:    Server.c                    *
+ *Created by:   Mina Essam                  *
+ *Date:         08/20/2022                  *
+ *Version:      V01                         *
+ ********************************************/
 #include "server.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 extern ST_accountsDB_t Accounts[255];
 extern ST_transaction_t transactionDetails[255];
 static uint32_t sequenceNumber    = 1000;
 static uint8_t transactionCounter = 0;
-static int16_t DBCounter = 0;
+static int16_t DBCounter          = 0;
 
 /*search function in DB accounts to search for a given PAN number and return
  * the index of the found PAN number*/
 int32_t searchInDB(ST_cardData_t *cData){
-    printf("we are in search \n");
+   // printf("we are in search \n");
     int32_t index, subIndex, result = -1, isMatched = -1;
     for(index =0; index<255; index++)
     {
@@ -49,16 +53,34 @@ EN_serverError_t saveTransaction(ST_transaction_t *transData){
 
         transactionDetails[transactionCounter]= *transData;
         transactionDetails[transactionCounter].transactionSequenceNumber = sequenceNumber;
+   //     printf("transaction saved successfully  and it's sequence numer is  %d \n",sequenceNumber);
+        printf("transaction saved successfully and it's sequence Number:  %d \n",transactionDetails[transactionCounter].transactionSequenceNumber);
         transactionCounter++;
         sequenceNumber++;
         isTransactionSaved = OK;
-        printf("transaction saved successfully  and it's sequence numer is  %d \n",sequenceNumber);
+
     }
 return isTransactionSaved;
 }
+uint32_t transactionNumber(void){
+    uint8_t  i;
+    uint32_t res;
+    for(i =0; i < 255; i++)
+    {
+        if(transactionDetails[i].transactionSequenceNumber >= 1000)
+        {
+            res = transactionDetails[i].transactionSequenceNumber;
+        }
+        else{
+            break;
+        }
+    }
+return res;
+}
+
 EN_serverError_t isAmountAvailable(ST_terminalData_t *termData){
 
-    EN_serverError_t isAvailableBalance = LOW_BALANCE;
+    EN_serverError_t isAvailableBalance;
     if(termData->transAmount > Accounts[DBCounter].balance){
         isAvailableBalance = LOW_BALANCE;
         printf("Low Balance \n");
@@ -87,14 +109,17 @@ EN_serverError_t isValidAccount(ST_cardData_t *cardData){
 
 EN_transStat_t receiveTransactionData(ST_transaction_t *transData) {
     EN_transStat_t isSavedTransaction = APPROVED;
-    printf("we are ready \n");
+   // printf("we are ready \n");
     if (isValidAccount(&transData->cardHolderData) == ACCOUNT_NOT_FOUND){
         isSavedTransaction = DECLINED_STOLEN_CARD;
-        printf("here 1 \n");
+        printf("Incorrect Card Number Declined Transaction .... \n");
+        exit(0);
     }
     else if(isAmountAvailable(&transData->terminalData) == LOW_BALANCE){
         isSavedTransaction = DECLINED_INSUFFICIENT_FUND;
-        printf("here 2 \n");
+        printf("INSUFFICIENT FUND Transaction Declined ... \n");
+        exit(0);
+
     }
     else if(saveTransaction(transData)== SAVING_FAILED ){
         isSavedTransaction = INTERNAL_SERVER_ERROR;
@@ -113,7 +138,7 @@ return isSavedTransaction;
 EN_serverError_t getTransaction(uint32_t transactionSequenceNumber, ST_transaction_t *transData){
     uint8_t i;
     EN_serverError_t isFound;
-    printf("We are in receive transaction \n");
+   // printf("We are in receive transaction \n");
     for(i = 0; i <255;i++)
     {
         if(transactionSequenceNumber == transactionDetails[i].transactionSequenceNumber)
@@ -126,10 +151,13 @@ EN_serverError_t getTransaction(uint32_t transactionSequenceNumber, ST_transacti
             break;
         }
     }
-
-    printf("Final username is %s \n", transData->cardHolderData.cardHolderName);
-    printf("Transaction Date %s\n", transData->terminalData.transactionDate);
-    printf("Card Expiry Date %s \n", transData->cardHolderData.cardExpirationDate);
-    printf("Withdrawn Amount %d \n", transData ->terminalData.transAmount);
+    printf("Loading Transaction Information ......\n");
+    printf("Account Holder Name:        %s \n",  transData->cardHolderData.cardHolderName);
+    printf("Primary Account Number:     %s \n",  transData ->cardHolderData.primaryAccountNumber);
+    printf("Transaction Date:           %s \n",  transData->terminalData.transactionDate);
+    printf("Card Expiry Date:           %s \n",  transData->cardHolderData.cardExpirationDate);
+    printf("Withdrawn Amount:           %f \n",  transData ->terminalData.transAmount);
+    printf("Remaining Balance:          %f \n",  Accounts[DBCounter].balance);
+    printf("Thank you for using our services .......\n");
     return isFound;
 }

@@ -19,6 +19,7 @@ static ST_cardData_t cardData;
 static ST_terminalData_t termData;
 extern ST_accountsDB_t Accounts[255];
 static ST_transaction_t transactionDetails;
+static uint32_t transaction_Number = 0;
 /**     End of Global and static variables declarations         **/
 
 void appStart(void){
@@ -26,13 +27,15 @@ void appStart(void){
     getchar();
     getCardPAN(&cardData);
     getchar();
-    getCardExpiryDate(&cardData);
+   getTransactionDate(&termData);
+   getCardExpiryDate(&cardData);
+    isCardExpired(cardData, termData);
     setMaxAmount(&termData);
-    getTransactionDate(&termData);
     getTransactionAmount(&termData);
     isCardExpired(cardData, termData);
     isBelowMaxAmount(&termData);
     ST_transaction_t serverData ={cardData, termData};
     receiveTransactionData(&serverData);
-    getTransaction(1000, &transactionDetails);
+    transaction_Number = transactionNumber();
+    getTransaction(transaction_Number, &transactionDetails);
 }
